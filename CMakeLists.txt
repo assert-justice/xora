@@ -8,13 +8,16 @@ IF (WIN32)
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive")
 ENDIF()
 
+set (OpenGL_GL_PREFERENCE GLVND)
+
 find_package( OpenGL REQUIRED )
 
 include_directories( ${OPENGL_INCLUDE_DIRS} ./src ./include )
 
 set( GLFW_BUILD_DOCS OFF CACHE BOOL  "GLFW lib only" )
 set( GLFW_INSTALL OFF CACHE BOOL  "GLFW lib only" )
-set( GLAD_GL "" )
+set( GLFW_BUILD_WAYLAND OFF)
+# set( GLAD_GL "" )
 
 add_subdirectory( glfw )
 add_subdirectory( libbullet3-cmake )

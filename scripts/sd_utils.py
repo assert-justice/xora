@@ -46,6 +46,10 @@ class Cli():
         shutil.copy(src, dest)
     def is_dir(self, path) -> bool:
         return os.path.isdir(os.path.join(self.cwd(), path))
+    def exists(self, path) -> bool:
+        return os.path.exists(path)
+    def is_file(self, path) -> bool:
+        return os.path.isfile(path)
     def mkdir(self, path) -> None:
         path = os.path.join(self.cwd(), path)
         os.mkdir(path)
