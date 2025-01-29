@@ -135,7 +135,7 @@ void Game::run(){
 	// }
 
     if(!engine.init(this)){
-        std::cout << "Engine failed to initalized" << std::endl;
+        std::cout << "Engine failed to initialize" << std::endl;
         return;
     }
 

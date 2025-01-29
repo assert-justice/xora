@@ -14,10 +14,6 @@ def main():
         cli.copy(f'./build/xora{exe_ext}', './dist')
         cli.cd('dist')
         cli.run([f'./xora{exe_ext}'])
-    # cd into build
-    # run ninja
-    # copy xora.exe (or just xora) to dist
-    pass
 
 if __name__ == "__main__":
     main()

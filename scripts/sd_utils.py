@@ -54,7 +54,13 @@ class Cli():
         path = os.path.join(self.cwd(), path)
         os.mkdir(path)
     def run(self, args: list[str]):
-        subprocess.run(args).check_returncode()
+        res = subprocess.run(args)
+        try:
+            res.check_returncode()
+        except subprocess.CalledProcessError as e:
+            print(e)
+            exit(res.returncode)
+            
 
 def prompt(query: str) -> bool:
     query += ' (y/n)?'

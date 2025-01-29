@@ -39,6 +39,7 @@ set( XORA-EXTERN
     ./include/stb_image.c
     ./include/stb_image_write.c
     ./include/glad/glad.c
+    ./include/pocketpy.c
 )
 
 set( XORA-UTILS
@@ -67,6 +68,12 @@ set( XORA-GRAPHICS
     src/graphics/mesh.cpp
 )
 
+set( XORA-VM
+    src/vm/vm.cpp
+    src/vm/vm_engine.cpp
+    src/vm/vm_system.cpp
+)
+
 set( XORA-GAME 
     src/game/game.cpp
     src/game/box.cpp
@@ -74,7 +81,7 @@ set( XORA-GAME
     src/game/camera.cpp
 )
 
-set( XORA-SRC ${XORA-EXTERN} ${XORA-UTILS} ${XORA-ENGINE} ${XORA-INPUT} ${XORA-GRAPHICS} ${XORA-GAME} src/main.cpp )
+set( XORA-SRC ${XORA-EXTERN} ${XORA-UTILS} ${XORA-ENGINE} ${XORA-INPUT} ${XORA-GRAPHICS} ${XORA-VM} ${XORA-GAME} src/main.cpp )
 
 add_executable( xora ${XORA-SRC} ${GLAD_GL} )
 # add_executable( xora WIN32 ${XORA-SRC} ${GLAD_GL} )
