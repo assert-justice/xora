@@ -15,4 +15,5 @@ class VM: public Module{
     public:
     bool update();
     bool draw();
+    bool launch();
 };

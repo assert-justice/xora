@@ -24,9 +24,6 @@ bool VM::initInternal()
         return false;
     }
     initFn = py_getglobal(py_name("init"));
-    if(initFn != NULL){
-        hasError = !py_call(initFn, 0, NULL);
-    }
     updateFn = py_getglobal(py_name("update"));
     drawFn = py_getglobal(py_name("draw"));
     return !hasError;
@@ -49,6 +46,14 @@ bool VM::draw()
 {
     if(drawFn == NULL) return true;
     bool ok = py_call(drawFn, 0, NULL);
+    if(!ok) py_printexc();
+    return ok;
+}
+
+bool VM::launch()
+{
+    if(initFn == NULL) return true;
+    bool ok = py_call(initFn, 0, NULL);
     if(!ok) py_printexc();
     return ok;
 }

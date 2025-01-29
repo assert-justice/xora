@@ -1,5 +1,4 @@
 #pragma once
-#include "app.hpp"
 #include "graphics/graphics.hpp"
 #include "input/vinput.hpp"
 #include "vm/vm.hpp"
@@ -9,7 +8,7 @@ class Engine{
     Graphics graphics;
     VInput input;
     VM vm;
-    bool init(App* app);
+    bool init();
     void cleanup();
     void quit();
     double deltaTime();
@@ -20,7 +19,6 @@ class Engine{
     double dt;
     double ft;
     double tickRate = 100;
-    App* app = nullptr;
     bool isRunning = true;
     bool loop();
 };

@@ -3,11 +3,20 @@
 // #include "btLinearMathAll.cpp"
 // #include <stdio.h>
 // #include <iostream>
-#include "game/game.hpp"
+// #include "game/game.hpp"
+#include "engine/engine.hpp"
+
+// int main(){
+//     Game game;
+//     game.run();
+//     return 0;
+// }
 
 int main(){
-    Game game;
-    game.run();
+    if(!engine.init()){
+        printf("Engine encountered an error!\n");
+    }
+    engine.cleanup();
     return 0;
 }
 

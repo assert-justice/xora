@@ -1,14 +1,12 @@
 #include "engine.hpp"
 #include "utils/time.hpp"
 
-bool Engine::init(App *a){
+bool Engine::init(){
     bool hasError = false;
-    app = a;
     graphics.init(&hasError);
     input.init(&hasError);
     vm.init(&hasError);
     if(hasError) return false;
-    app->init();
     return loop();
 }
 
@@ -40,6 +38,7 @@ bool Engine::loop()
     double acc = 0.0;
     double scriptTime;
     double elapsedTime = 0;
+    if(!vm.launch()) return false;
     while (isRunning){
         double newTime = getTime();
         // time since last frame
@@ -54,15 +53,13 @@ bool Engine::loop()
         while(acc >= dt){
             scriptTime = getTime();
             input.poll(scriptTime);
-            vm.update();
-            app->update(dt);
+            if(!vm.update()) return false;
             elapsedTime = getTime() - scriptTime;
             acc -= dt;
             t += dt;
         }
         graphics.drawBegin();
-        vm.draw();
-        app->draw();
+        if(!vm.draw()) return false;
         graphics.drawEnd();
         if(graphics.shouldClose()) isRunning = false;
     }
