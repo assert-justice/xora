@@ -5,7 +5,7 @@ bool Engine::init(){
     bool hasError = false;
     vm.init(&hasError);
     graphics.init(&hasError);
-    input.init(&hasError);
+    // input.init(&hasError);
     if(hasError) return false;
     return loop();
 }
@@ -52,7 +52,8 @@ bool Engine::loop()
         // while the time budget has at least one more full time for a script update
         while(acc >= dt){
             scriptTime = getTime();
-            input.poll(scriptTime);
+            // input.poll(scriptTime);
+            glfwPollEvents();
             if(!vm.update()) return false;
             elapsedTime = getTime() - scriptTime;
             acc -= dt;

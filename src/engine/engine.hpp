@@ -1,12 +1,12 @@
 #pragma once
 #include "graphics/graphics.hpp"
-#include "input/vinput.hpp"
+// #include "input/vinput.hpp"
 #include "vm/vm.hpp"
 
 class Engine{
     public:
     Graphics graphics;
-    VInput input;
+    // VInput input;
     VM vm;
     bool init();
     void cleanup();

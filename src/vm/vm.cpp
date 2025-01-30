@@ -3,6 +3,7 @@
 #include "vm_engine.hpp"
 #include "vm_system.hpp"
 #include "vm_window.hpp"
+#include "vm_input.hpp"
 
 bool VM::initInternal()
 {
@@ -11,6 +12,7 @@ bool VM::initInternal()
     bindSystem();
     bindEngine();
     bindWindow();
+    bindInput();
     // Read main script
     auto text = readFile(&hasError, "main.py");
     if(hasError) {
