@@ -4,6 +4,16 @@
 #include "stb_image_write.h"
 #include "utils/fs.hpp"
 
+void Graphics::setStats(std::string name, int width, int height, int mode)
+{
+    windowName = name;
+    windowWidth = width;
+    windowHeight = height;
+    windowMode = mode;
+    if(window == NULL) return;
+    printf("Resizing the window at runtime is not yet supported\n");
+}
+
 void Graphics::drawBegin()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -131,7 +141,7 @@ bool Graphics::initInternal()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    window = glfwCreateWindow(640, 480, "Xora", NULL, NULL);
+    window = glfwCreateWindow(windowWidth, windowHeight, windowName.c_str(), NULL, NULL);
     if (!window){
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();

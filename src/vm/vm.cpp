@@ -2,16 +2,15 @@
 #include "utils/fs.hpp"
 #include "vm_engine.hpp"
 #include "vm_system.hpp"
+#include "vm_window.hpp"
 
 bool VM::initInternal()
 {
     py_initialize();
     bool hasError = false;
-    py_GlobalRef mod;
-    // Bind system functions
     bindSystem();
-    // Bind engine functions
     bindEngine();
+    bindWindow();
     // Read main script
     auto text = readFile(&hasError, "main.py");
     if(hasError) {

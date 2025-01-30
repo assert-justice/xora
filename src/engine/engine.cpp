@@ -3,9 +3,9 @@
 
 bool Engine::init(){
     bool hasError = false;
+    vm.init(&hasError);
     graphics.init(&hasError);
     input.init(&hasError);
-    vm.init(&hasError);
     if(hasError) return false;
     return loop();
 }

@@ -13,6 +13,9 @@
 class Graphics: public Module{
     public:
     // General
+    void setStats(std::string name, int width, int height, int mode);
+    int getWindowWidth(){return windowWidth;}
+    int getWindowHeight(){return windowHeight;}
     void drawBegin();
     void drawEnd();
     bool shouldClose();
@@ -37,7 +40,11 @@ class Graphics: public Module{
     bool initInternal();
     void cleanupInternal();
     private:
-    GLFWwindow* window;
+    GLFWwindow* window = NULL;
+    std::string windowName = "Xora";
+    int windowWidth = 640;
+    int windowHeight = 480;
+    int windowMode = 0;
     Store<Texture> textureStore;
     Store<Shader> shaderStore;
     Store<Mesh> meshStore;

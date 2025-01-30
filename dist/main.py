@@ -1,10 +1,15 @@
-from xora_engine import engine
+from xora_engine import engine, window
+
+window.set_stats('Xora is cool', 800, 600, 0)
 
 def init():
-    print('sup')
+    print(f'window width: {window.get_width()}')
+    print(f'window height: {window.get_height()}')
 
 def update():
-    print(f'dt: {engine.delta_time()}')
+    pass
+    # print(f'dt: {engine.delta_time()}')
 
 def draw():
-    print(f'ft: {engine.frame_time()}')
+    pass
+    # print(f'ft: {engine.frame_time()}')

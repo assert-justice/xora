@@ -72,6 +72,7 @@ set( XORA-VM
     src/vm/vm.cpp
     src/vm/vm_engine.cpp
     src/vm/vm_system.cpp
+    src/vm/vm_window.cpp
 )
 
 # set( XORA-GAME 

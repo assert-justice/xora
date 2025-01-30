@@ -14,6 +14,7 @@ static bool frameTimeFn(int argc, py_Ref argv){
 static bool quitFn(int argc, py_Ref argv){
     PY_CHECK_ARGC(0);
     engine.quit();
+    py_newnone(py_retval());
     return true;
 }
 
