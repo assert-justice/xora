@@ -20,6 +20,20 @@ class Graphics: public Module{
     void drawEnd();
     bool shouldClose();
     void clear();
+    // void drawImage(
+    //     int textureId,
+    //     glm::mat4 spriteTransform,
+    //     glm::mat4 coordTransform
+    // );
+    void drawImage(int textureId, float x, float y);
+    void drawImageExt(int textureId,
+        float x, float y,
+        float width, float height,
+        float sx, float sy,
+        float sw, float sh,
+        float ox, float oy,
+        float angle
+    );
     GLFWwindow* getWindow();
     // Textures
     int newTexture(int width, int height, unsigned char* data);
@@ -45,7 +59,16 @@ class Graphics: public Module{
     int windowWidth = 640;
     int windowHeight = 480;
     int windowMode = 0;
+    int baseTextureId;
     Store<Texture> textureStore;
     Store<Shader> shaderStore;
     Store<Mesh> meshStore;
+    Shader* spriteShader;
+    Mesh* quadMesh;
+    void drawImageInternal(
+        Texture* tex,
+        glm::mat4 cameraTransform,
+        glm::mat4 spriteTransform,
+        glm::mat4 coordTransform
+    );
 };

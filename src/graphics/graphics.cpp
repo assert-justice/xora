@@ -3,6 +3,85 @@
 #include "stb_image.h"
 #include "stb_image_write.h"
 #include "utils/fs.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+float quad[] = {
+    1.0f, 1.0f, 0.0f,     1.0f, 1.0f, // top right
+    1.0f, 0.0f, 0.0f,     1.0f, 0.0f, // bottom right
+    0.0f, 1.0f, 0.0f,     0.0f, 1.0f, // top left
+
+    1.0f, 0.0f, 0.0f,     1.0f, 0.0f, // bottom right
+    0.0f, 1.0f, 0.0f,     0.0f, 1.0f, // top left
+    0.0f, 0.0f, 0.0f,     0.0f, 0.0f, // bottom left
+};
+
+float cube[] = {
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+    0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+    0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+};
+
+static const char* spriteVertSrc = "#version 330 core\n"
+    "layout (location = 0) in vec3 aPos;"
+    "layout (location = 1) in vec2 aTexCoord;"
+    "out vec2 TexCoord;"
+    "uniform mat4 camera;"
+    "uniform mat4 sprite;"
+    "uniform mat4 coord;"
+    "void main()"
+    "{"
+    "    gl_Position = camera * sprite * vec4(aPos, 1.0);"
+    "    TexCoord = (coord * vec4(aTexCoord, 1.0, 1.0)).xy;"
+    "}";
+
+static const char* spriteFragSrc = "#version 330 core\n"
+    "out vec4 FragColor;"
+    "in vec2 TexCoord;"
+    "uniform sampler2D ourTexture;"
+    "void main()"
+    "{"
+    "    FragColor = texture(ourTexture, TexCoord);"
+    "}";
 
 void Graphics::setStats(std::string name, int width, int height, int mode)
 {
@@ -18,12 +97,25 @@ void Graphics::drawBegin()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     clear();
+    getTexture(baseTextureId)->useTarget();
+    clear();
 }
 
 void Graphics::drawEnd()
 {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    // Draw baseTexture
+    Texture* tex = getTexture(baseTextureId);
+    auto rootTransform = glm::ortho(0.0f, (float)windowWidth, float(windowHeight), 0.0f, -0.1f, 100.0f);
+    auto spriteTransform = glm::mat4(1.0f);
+    spriteTransform = glm::scale(spriteTransform, glm::vec3(tex->width ,tex->height, 0.0f));
+    drawImageInternal(
+        tex,
+        rootTransform,
+        spriteTransform,
+        glm::mat4(1.0f)  
+    );
     glfwSwapBuffers(window);
-    glfwPollEvents();
 }
 
 bool Graphics::shouldClose()
@@ -34,6 +126,46 @@ bool Graphics::shouldClose()
 void Graphics::clear()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+// void Graphics::drawImage(int textureId, glm::mat4 spriteTransform, glm::mat4 coordTransform)
+// {
+//     auto tex = getTexture(textureId);
+//     if(tex == nullptr) return;
+//     glm::mat4 cameraTransform = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight, -0.1f, 100.0f);
+//     drawImageInternal(tex, cameraTransform, spriteTransform, coordTransform);
+// }
+
+void Graphics::drawImage(int textureId, float x, float y)
+{
+    auto tex = getTexture(textureId);
+    if(tex == nullptr) return;
+    glm::mat4 cameraTransform = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight, -0.1f, 100.0f);
+    glm::mat4 spriteTransform = glm::mat4(1);
+    spriteTransform = glm::translate(spriteTransform, glm::vec3(x, y, 0));
+    spriteTransform = glm::scale(spriteTransform, glm::vec3(tex->width, tex->height, 0));
+    glm::mat4 coordTransform = glm::mat4(1);
+    drawImageInternal(tex, cameraTransform, spriteTransform, coordTransform);
+}
+
+void Graphics::drawImageExt(int textureId, float x, float y, float width, float height, float sx, float sy, float sw, float sh, float ox, float oy, float angle)
+{
+    auto tex = getTexture(textureId);
+    if(tex == nullptr) return;
+    glm::mat4 cameraTransform = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight, -0.1f, 100.0f);
+    glm::mat4 spriteTransform = glm::mat4(1);
+    // spriteTransform = glm::translate(spriteTransform, glm::vec3(x, y, 0));
+    // spriteTransform = glm::scale(spriteTransform, glm::vec3(width, height, 0));
+    spriteTransform = glm::translate(spriteTransform, glm::vec3(x, y, 0.0f));
+    spriteTransform = glm::rotate(spriteTransform, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+    spriteTransform = glm::translate(spriteTransform, glm::vec3(-ox/sw*width, -oy/sh*height, 0.0f));
+    spriteTransform = glm::scale(spriteTransform, glm::vec3(width,height, 0.0f));
+    float sigma = 0.001;
+    glm::mat4 coordTransform = glm::mat4(1);
+    coordTransform = glm::translate(coordTransform, glm::vec3(glm::vec3(sx/tex->width+sigma, sy/tex->height+sigma, 0.0)));
+    coordTransform = glm::scale(coordTransform, glm::vec3(sw/tex->width - 2 * sigma, sh/tex->height - 2 * sigma, 0.0));
+
+    drawImageInternal(tex, cameraTransform, spriteTransform, coordTransform);
 }
 
 GLFWwindow* Graphics::getWindow()
@@ -103,6 +235,7 @@ int Graphics::newShader(std::string vertexSource, std::string fragmentSource){
 }
 
 void Graphics::freeShader(int id){
+    if(id < 1) return; // Do not free built in sprite shader
     shaderStore.del(id);
 }
 
@@ -122,6 +255,7 @@ int Graphics::newMesh(std::vector<float> &data, std::vector<int> attribSizes)
 
 void Graphics::freeMesh(int id)
 {
+    if(id < 2) return; // Do not delete built in quad and cube meshes
     meshStore.del(id);
 }
 
@@ -157,9 +291,42 @@ bool Graphics::initInternal()
     glfwSwapInterval(1);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glEnable(GL_DEPTH_TEST); 
+    std::vector<float> quadData(quad, quad + sizeof quad / sizeof quad[0]);
+    std::vector<float> cubeData(cube, cube + sizeof(cube)/4);
+    int qd = newMesh(quadData, {3, 2}); // Quad mesh id is 0
+    quadMesh = getMesh(qd);
+    newMesh(cubeData, {3, 2}); // Cube mesh id is 1
+    int sprShaderId = newShader(spriteVertSrc, spriteFragSrc); // Sprite shader id is 0
+    spriteShader = getShader(sprShaderId);
+    baseTextureId = newTexture(windowWidth, windowHeight, NULL);
     return true;
 }
 
 void Graphics::cleanupInternal(){
+    textureStore.clear();
+    meshStore.clear();
+    shaderStore.clear();
     glfwTerminate();
+}
+
+void Graphics::drawImageInternal(Texture *tex, glm::mat4 cameraTransform, glm::mat4 spriteTransform, glm::mat4 coordTransform)
+{
+    tex->use();
+    spriteShader->use();
+    spriteShader->setUniform("camera", cameraTransform);
+    spriteShader->setUniform("sprite", spriteTransform);
+    spriteShader->setUniform("coord", coordTransform);
+    quadMesh->draw();
+    // unsigned int cameraLoc, spriteLoc, coordLoc;
+    // unsigned int cameraLoc = glGetUniformLocation(spriteShader.id, "camera");
+    // cameraLoc = spriteShader->getUniformLocation("camera");
+    // glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(cameraTransform));
+    // unsigned int spriteLoc = glGetUniformLocation(spriteShader.id, "sprite");
+    // spriteLoc = spriteShader->getUniformLocation("sprite");
+    // glUniformMatrix4fv(spriteLoc, 1, GL_FALSE, glm::value_ptr(spriteTransform));
+    // unsigned int coordLoc = glGetUniformLocation(spriteShader.id, "coord");
+    // coordLoc = spriteShader->getUniformLocation("coord");
+    // glUniformMatrix4fv(coordLoc, 1, GL_FALSE, glm::value_ptr(coordTransform));
+    // glBindVertexArray(VAO);
+    // glDrawArrays(GL_TRIANGLES, 0, 6);
 }

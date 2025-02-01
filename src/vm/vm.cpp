@@ -4,6 +4,7 @@
 #include "vm_system.hpp"
 #include "vm_window.hpp"
 #include "vm_input.hpp"
+#include "vm_graphics.hpp"
 
 bool VM::initInternal()
 {
@@ -13,6 +14,7 @@ bool VM::initInternal()
     bindEngine();
     bindWindow();
     bindInput();
+    bindGraphics();
     // Read main script
     auto text = readFile(&hasError, "main.py");
     if(hasError) {
