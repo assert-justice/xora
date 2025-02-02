@@ -1,19 +1,15 @@
 # Xora Engine
 
+An easy to use 2D and 3D game engine. Use Python as your scripting language.
+
 ## Todo:
-
-Entity type
-
-Bullet objects point to entity type
-
-AS integration
-(how to expose entity logic to as?)
-
-json reading library
-
-obj loading library
-
-2d sprite rendering
-
-font rendering
+- graphics bindings [started]
+- input bindings [started]
+- window bindings [started]
+- audio bindings
+- physics bindings
+- integrate flecs
+- json reading library
+- obj loading library
+- font rendering
 

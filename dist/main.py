@@ -9,6 +9,7 @@ def init():
     print(f'window width: {window.get_width()}')
     print(f'window height: {window.get_height()}')
     handle = graphics.new_texture_from_file('./textures/wall.jpg')
+    print(graphics.get_texture_dimensions(handle))
     # print(handle)
 
 def update():

@@ -53,9 +53,22 @@ static bool drawTextureExtFn(int argc, py_Ref argv){
     return true;
 }
 
+static bool getTextureDimensionsFn(int argc, py_Ref argv){
+    PY_CHECK_ARGC(1);
+    PY_CHECK_ARG_TYPE(0, tp_int);
+    int texId = py_toint(py_arg(0));
+    auto tex = engine.graphics.getTexture(texId);
+    py_Ref r = py_retval();
+    py_newtuple(r, 2);
+    py_newint(py_tuple_getitem(r, 0), tex->width);
+    py_newint(py_tuple_getitem(r, 1), tex->height);
+    return true;
+}
+
 void bindGraphics(){
     auto mod = py_newmodule("xora_engine.graphics");
     py_bindfunc(mod, "new_texture_from_file", newTextureFromFileFn);
     py_bindfunc(mod, "draw_texture", drawTextureFn);
     py_bindfunc(mod, "draw_texture_ext", drawTextureExtFn);
+    py_bindfunc(mod, "get_texture_dimensions", getTextureDimensionsFn);
 }
