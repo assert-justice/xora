@@ -72,6 +72,11 @@ void Shader::setUniform(std::string name, glm::mat4 matrix)
     glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
+void Shader::setUniform(int location, glm::mat4 matrix)
+{
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
 unsigned int Shader::getUniformLocation(const char* name){
     return glGetUniformLocation(id, name);
 }

@@ -115,6 +115,34 @@ static bool bindTextureFn(int argc, py_Ref argv){
     return true;
 }
 
+static bool setShaderUniformMat4x4(int argc, py_Ref argv){
+    PY_CHECK_ARGC(2);
+    PY_CHECK_ARG_TYPE(0, tp_int);
+    PY_CHECK_ARG_TYPE(1, tp_int);
+    int shaderId = py_toint(py_arg(0));
+    int loc = py_toint(py_arg(1));
+    auto shader = engine.graphics.getShader(shaderId);
+    if(!shader){
+        return py_exception(tp_AttributeError, "Invalid shader id");
+    }
+    shader->setUniform(loc, engine.xoMath.popMat4());
+    py_newnone(py_retval());
+    return true;
+}
+
+static bool drawMeshFn(int argc, py_Ref argv){
+    PY_CHECK_ARGC(1);
+    PY_CHECK_ARG_TYPE(0, tp_int);
+    int meshId = py_toint(py_arg(0));
+    auto mesh = engine.graphics.getMesh(meshId);
+    if(!mesh){
+        return py_exception(tp_AttributeError, "Invalid mesh id");
+    }
+    mesh->draw();
+    py_newnone(py_retval());
+    return true;
+}
+
 void bindGraphics(){
     auto mod = py_newmodule("xora_engine.graphics");
     py_bindfunc(mod, "new_texture_from_file", newTextureFromFileFn);
@@ -125,4 +153,6 @@ void bindGraphics(){
     py_bindfunc(mod, "get_shader_uniform_location", getShaderUniformLocationFn);
     py_bindfunc(mod, "bind_shader", bindShaderFn);
     py_bindfunc(mod, "bind_texture", bindTextureFn);
+    py_bindfunc(mod, "set_shader_uniform_mat4x4", setShaderUniformMat4x4);
+    py_bindfunc(mod, "draw_mesh", drawMeshFn);
 }

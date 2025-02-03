@@ -75,6 +75,7 @@ set( XORA-VM
     src/vm/vm_window.cpp
     src/vm/vm_input.cpp
     src/vm/vm_graphics.cpp
+    src/vm/vm_math.cpp
 )
 
 set( XORA-MATH
