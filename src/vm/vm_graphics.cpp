@@ -65,10 +65,64 @@ static bool getTextureDimensionsFn(int argc, py_Ref argv){
     return true;
 }
 
+static bool newShaderFn(int argc, py_Ref argv){
+    PY_CHECK_ARGC(2);
+    PY_CHECK_ARG_TYPE(0, tp_str);
+    PY_CHECK_ARG_TYPE(1, tp_str);
+    auto vertSrc = py_tostr(py_arg(0));
+    auto fragSrc = py_tostr(py_arg(1));
+    py_newint(py_retval(), engine.graphics.newShader(vertSrc, fragSrc));
+    return true;
+}
+
+static bool getShaderUniformLocationFn(int argc, py_Ref argv){
+    PY_CHECK_ARGC(2);
+    PY_CHECK_ARG_TYPE(0, tp_int);
+    PY_CHECK_ARG_TYPE(1, tp_str);
+    auto shaderId = py_toint(py_arg(0));
+    auto name = py_tostr(py_arg(1));
+    auto shader = engine.graphics.getShader(shaderId);
+    if(!shader){
+        return py_exception(tp_AttributeError, "Invalid shader id");
+    }
+    py_newint(py_retval(), shader->getUniformLocation(name));
+    return true;
+}
+
+static bool bindShaderFn(int argc, py_Ref argv){
+    PY_CHECK_ARGC(1);
+    PY_CHECK_ARG_TYPE(0, tp_int);
+    auto shaderId = py_toint(py_arg(0));
+    auto shader = engine.graphics.getShader(shaderId);
+    if(!shader){
+        return py_exception(tp_AttributeError, "Invalid shader id");
+    }
+    shader->use();
+    py_newnone(py_retval());
+    return true;
+}
+
+static bool bindTextureFn(int argc, py_Ref argv){
+    PY_CHECK_ARGC(1);
+    PY_CHECK_ARG_TYPE(0, tp_int);
+    auto textureId = py_toint(py_arg(0));
+    auto tex = engine.graphics.getTexture(textureId);
+    if(!tex){
+        return py_exception(tp_AttributeError, "Invalid texture id");
+    }
+    tex->use();
+    py_newnone(py_retval());
+    return true;
+}
+
 void bindGraphics(){
     auto mod = py_newmodule("xora_engine.graphics");
     py_bindfunc(mod, "new_texture_from_file", newTextureFromFileFn);
     py_bindfunc(mod, "draw_texture", drawTextureFn);
     py_bindfunc(mod, "draw_texture_ext", drawTextureExtFn);
     py_bindfunc(mod, "get_texture_dimensions", getTextureDimensionsFn);
+    py_bindfunc(mod, "new_shader", newShaderFn);
+    py_bindfunc(mod, "get_shader_uniform_location", getShaderUniformLocationFn);
+    py_bindfunc(mod, "bind_shader", bindShaderFn);
+    py_bindfunc(mod, "bind_texture", bindTextureFn);
 }

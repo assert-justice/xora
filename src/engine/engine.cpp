@@ -5,7 +5,7 @@ bool Engine::init(){
     bool hasError = false;
     vm.init(&hasError);
     graphics.init(&hasError);
-    // input.init(&hasError);
+    xoMath.init(&hasError);
     if(hasError) return false;
     return loop();
 }

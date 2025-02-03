@@ -9,7 +9,5 @@ An easy to use 2D and 3D game engine. Use Python as your scripting language.
 - audio bindings
 - physics bindings
 - integrate flecs
-- json reading library
 - obj loading library
 - font rendering
-

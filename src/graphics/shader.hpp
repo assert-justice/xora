@@ -13,7 +13,7 @@ class Shader{
     ~Shader();
     void use();
     void setUniform(std::string name, glm::mat4 matrix);
-    private:
+    // private:
     unsigned int getUniformLocation(const char* name);
     // unsigned int getAttribLocation(const char* name);
 };
