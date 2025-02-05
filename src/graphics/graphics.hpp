@@ -17,9 +17,12 @@ class Graphics: public Module{
     int getWindowWidth(){return windowWidth;}
     int getWindowHeight(){return windowHeight;}
     void drawBegin();
+    void drawUiBegin();
     void drawEnd();
     bool shouldClose();
-    void clear();
+    void clearColor();
+    void clearDepth();
+    void clearAll();
     // void drawImage(
     //     int textureId,
     //     glm::mat4 spriteTransform,

@@ -50,7 +50,7 @@ bool Engine::loop()
         // in this way "left over" time will roll over to the next render loop
         acc += ft;
         // while the time budget has at least one more full time for a script update
-        while(acc >= dt){
+        while(isRunning && acc >= dt){
             scriptTime = getTime();
             // input.poll(scriptTime);
             glfwPollEvents();
@@ -61,6 +61,8 @@ bool Engine::loop()
         }
         graphics.drawBegin();
         if(!vm.draw()) return false;
+        graphics.drawUiBegin();
+        if(!vm.drawUi()) return false;
         graphics.drawEnd();
         if(graphics.shouldClose()) isRunning = false;
     }

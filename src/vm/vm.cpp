@@ -31,6 +31,7 @@ bool VM::initInternal()
     initFn = py_getglobal(py_name("init"));
     updateFn = py_getglobal(py_name("update"));
     drawFn = py_getglobal(py_name("draw"));
+    drawUiFn = py_getglobal(py_name("draw_ui"));
     return !hasError;
 }
 
@@ -51,6 +52,14 @@ bool VM::draw()
 {
     if(drawFn == NULL) return true;
     bool ok = py_call(drawFn, 0, NULL);
+    if(!ok) py_printexc();
+    return ok;
+}
+
+bool VM::drawUi()
+{
+    if(drawUiFn == NULL) return true;
+    bool ok = py_call(drawUiFn, 0, NULL);
     if(!ok) py_printexc();
     return ok;
 }

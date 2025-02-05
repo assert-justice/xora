@@ -35,9 +35,9 @@ def update():
         dx = -1
     if input.is_key_down(input_lookup.Keys.d):
         dx = 1
-    if input.is_key_down(input_lookup.Keys.space):
-        dy = -1
     if input.is_key_down(input_lookup.Keys.left_control):
+        dy = -1
+    if input.is_key_down(input_lookup.Keys.space):
         dy = 1
     if input.is_key_down(input_lookup.Keys.s):
         dz = -1
@@ -70,4 +70,8 @@ def draw():
     # graphics.draw_texture(handle, 0.0, 0.0)
     # graphics.draw_texture_ext(texture_id, 0.0, 0.0, 100.0, 100.0, 0.0, 0.0, 100.0, 100.0, 0.0, 0.0, 0.0)
     # print(f'ft: {engine.frame_time()}')
+    pass
+
+def draw_ui():
+    graphics.draw_texture_ext(texture_id, 0.0, 0.0, 100.0, 100.0, 0.0, 0.0, 100.0, 100.0, 0.0, 0.0, 0.0)
     pass

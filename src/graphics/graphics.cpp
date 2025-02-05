@@ -96,9 +96,14 @@ void Graphics::setStats(std::string name, int width, int height, int mode)
 void Graphics::drawBegin()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    clear();
+    clearAll();
+}
+
+void Graphics::drawUiBegin()
+{
     getTexture(baseTextureId)->useTarget();
-    clear();
+    // glClearColor(0, 0, 0, 0);
+    clearColor();
 }
 
 void Graphics::drawEnd()
@@ -123,7 +128,17 @@ bool Graphics::shouldClose()
     return glfwWindowShouldClose(window);
 }
 
-void Graphics::clear()
+void Graphics::clearColor()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void Graphics::clearDepth()
+{
+    glClear(GL_DEPTH_BUFFER_BIT);
+}
+
+void Graphics::clearAll()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
@@ -289,7 +304,7 @@ bool Graphics::initInternal()
         return false;
     }
     glfwSwapInterval(1);
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(0.2f, 0.3f, 0.3f, 0.0f);
     glEnable(GL_DEPTH_TEST); 
     std::vector<float> quadData(quad, quad + sizeof quad / sizeof quad[0]);
     std::vector<float> cubeData(cube, cube + sizeof(cube)/4);

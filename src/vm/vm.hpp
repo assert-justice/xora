@@ -9,11 +9,13 @@ class VM: public Module{
     py_ItemRef initFn = NULL;
     py_ItemRef updateFn = NULL;
     py_ItemRef drawFn = NULL;
+    py_ItemRef drawUiFn = NULL;
     protected:
     bool initInternal();
     void cleanupInternal();
     public:
     bool update();
     bool draw();
+    bool drawUi();
     bool launch();
 };
