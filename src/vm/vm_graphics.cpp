@@ -130,6 +130,28 @@ static bool setShaderUniformMat4x4(int argc, py_Ref argv){
     return true;
 }
 
+static bool newMeshFn(int argc, py_Ref argv){
+    PY_CHECK_ARGC(2);
+    PY_CHECK_ARG_TYPE(0, tp_list);
+    PY_CHECK_ARG_TYPE(1, tp_list);
+    auto dataList = py_arg(0);
+    auto attribList = py_arg(1);
+    std::vector<float> data;
+    std::vector<int> attribSizes;
+    int len = py_list_len(dataList);
+    for(int i = 0; i < len; i++){
+        float item = py_tofloat(py_list_getitem(dataList, i));
+        data.push_back(item);
+    }
+    for(int i = 0; i < py_list_len(attribList); i++){
+        float item = py_toint(py_list_getitem(attribList, i));
+        attribSizes.push_back(item);
+    }
+    int id = engine.graphics.newMesh(data, attribSizes);
+    py_newint(py_retval(), id);
+    return true;
+}
+
 static bool drawMeshFn(int argc, py_Ref argv){
     PY_CHECK_ARGC(1);
     PY_CHECK_ARG_TYPE(0, tp_int);
@@ -154,5 +176,6 @@ void bindGraphics(){
     py_bindfunc(mod, "bind_shader", bindShaderFn);
     py_bindfunc(mod, "bind_texture", bindTextureFn);
     py_bindfunc(mod, "set_shader_uniform_mat4x4", setShaderUniformMat4x4);
+    py_bindfunc(mod, "new_mesh", newMeshFn);
     py_bindfunc(mod, "draw_mesh", drawMeshFn);
 }

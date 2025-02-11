@@ -3,6 +3,51 @@ from xora_engine.input_lookup import Keys
 from utils.texture import Texture
 from utils.la import Vec2, Vec3
 from box import Box
+from ent_data import EntData
+
+cube_verts = [
+    -0.5, -0.5, -0.5,  0.0, 0.0,
+    0.5, -0.5, -0.5,  1.0, 0.0,
+    0.5,  0.5, -0.5,  1.0, 1.0,
+    0.5,  0.5, -0.5,  1.0, 1.0,
+    -0.5,  0.5, -0.5,  0.0, 1.0,
+    -0.5, -0.5, -0.5,  0.0, 0.0,
+
+    -0.5, -0.5,  0.5,  0.0, 0.0,
+    0.5, -0.5,  0.5,  1.0, 0.0,
+    0.5,  0.5,  0.5,  1.0, 1.0,
+    0.5,  0.5,  0.5,  1.0, 1.0,
+    -0.5,  0.5,  0.5,  0.0, 1.0,
+    -0.5, -0.5,  0.5,  0.0, 0.0,
+
+    -0.5,  0.5,  0.5,  1.0, 0.0,
+    -0.5,  0.5, -0.5,  1.0, 1.0,
+    -0.5, -0.5, -0.5,  0.0, 1.0,
+    -0.5, -0.5, -0.5,  0.0, 1.0,
+    -0.5, -0.5,  0.5,  0.0, 0.0,
+    -0.5,  0.5,  0.5,  1.0, 0.0,
+
+    0.5,  0.5,  0.5,  1.0, 0.0,
+    0.5,  0.5, -0.5,  1.0, 1.0,
+    0.5, -0.5, -0.5,  0.0, 1.0,
+    0.5, -0.5, -0.5,  0.0, 1.0,
+    0.5, -0.5,  0.5,  0.0, 0.0,
+    0.5,  0.5,  0.5,  1.0, 0.0,
+
+    -0.5, -0.5, -0.5,  0.0, 1.0,
+    0.5, -0.5, -0.5,  1.0, 1.0,
+    0.5, -0.5,  0.5,  1.0, 0.0,
+    0.5, -0.5,  0.5,  1.0, 0.0,
+    -0.5, -0.5,  0.5,  0.0, 0.0,
+    -0.5, -0.5, -0.5,  0.0, 1.0,
+
+    -0.5,  0.5, -0.5,  0.0, 1.0,
+    0.5,  0.5, -0.5,  1.0, 1.0,
+    0.5,  0.5,  0.5,  1.0, 0.0,
+    0.5,  0.5,  0.5,  1.0, 0.0,
+    -0.5,  0.5,  0.5,  0.0, 0.0,
+    -0.5,  0.5, -0.5,  0.0, 1.0
+]
 
 class Game:
     def __init__(self):
@@ -22,12 +67,17 @@ class Game:
         self.floor_shape_id = physics.add_box_shape(50.0, 50.0, 50.0)
         self.box_shape_id = physics.add_box_shape(0.5, 0.5, 0.5)
         self.sphere_shape_id = physics.add_sphere_shape(0.5)
+        cube_verts = [v*100 for v in cube_verts]
+        self.big_cube = graphics.new_mesh(cube_verts, [3,2])
+        box_ent_data = EntData(self.box_shape_id, 1, self.crate_tex, self.shader_id, self.world_loc)
+        sphere_ent_data = EntData(self.sphere_shape_id, 1, self.crate_tex, self.shader_id, self.world_loc)
+        floor_ent_data = EntData(self.floor_shape_id, self.big_cube, self.brick_tex, self.shader_id, self.world_loc)
         self.boxes = [
-            Box(self.sphere_shape_id, self.shader_id, self.world_loc, Vec3(0.0, 0.0, 0.0), 1.0),
-            Box(self.box_shape_id, self.shader_id, self.world_loc, Vec3(0.5, 1.0, 0.0), 1.0),
-            Box(self.box_shape_id, self.shader_id, self.world_loc, Vec3(1.0, 2.0, 0.0), 1.0),
+            Box(sphere_ent_data, Vec3(0.0, 0.0, 0.0), 1.0),
+            Box(box_ent_data, Vec3(0.5, 1.0, 0.0), 1.0),
+            Box(box_ent_data, Vec3(1.0, 2.0, 0.0), 1.0),
+            Box(floor_ent_data, Vec3(0.0, 56.0, 0.0), 0.0),
         ]
-        self.floor_id = physics.add_rigid_body(self.floor_shape_id, 0.0, 56.0, 0.0, 0.0)
 
     def update(self, dt: float):
         if input.is_key_down(Keys.escape):
@@ -53,7 +103,7 @@ class Game:
         self.cam_pos += move
     def draw(self):
         graphics.bind_shader(self.shader_id)
-        self.crate_tex.bind()
+        # self.crate_tex.bind()
         xo_math.push_perspective(30.0, 8.0/6.0, 0.01, 100.0)
         xo_math.push_vector3(self.cam_angle.y, self.cam_angle.x, 0.0)
         xo_math.rotate_euler()

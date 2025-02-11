@@ -143,14 +143,6 @@ void Graphics::clearAll()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-// void Graphics::drawImage(int textureId, glm::mat4 spriteTransform, glm::mat4 coordTransform)
-// {
-//     auto tex = getTexture(textureId);
-//     if(tex == nullptr) return;
-//     glm::mat4 cameraTransform = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight, -0.1f, 100.0f);
-//     drawImageInternal(tex, cameraTransform, spriteTransform, coordTransform);
-// }
-
 void Graphics::drawImage(int textureId, float x, float y)
 {
     auto tex = getTexture(textureId);
@@ -332,16 +324,4 @@ void Graphics::drawImageInternal(Texture *tex, glm::mat4 cameraTransform, glm::m
     spriteShader->setUniform("sprite", spriteTransform);
     spriteShader->setUniform("coord", coordTransform);
     quadMesh->draw();
-    // unsigned int cameraLoc, spriteLoc, coordLoc;
-    // unsigned int cameraLoc = glGetUniformLocation(spriteShader.id, "camera");
-    // cameraLoc = spriteShader->getUniformLocation("camera");
-    // glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(cameraTransform));
-    // unsigned int spriteLoc = glGetUniformLocation(spriteShader.id, "sprite");
-    // spriteLoc = spriteShader->getUniformLocation("sprite");
-    // glUniformMatrix4fv(spriteLoc, 1, GL_FALSE, glm::value_ptr(spriteTransform));
-    // unsigned int coordLoc = glGetUniformLocation(spriteShader.id, "coord");
-    // coordLoc = spriteShader->getUniformLocation("coord");
-    // glUniformMatrix4fv(coordLoc, 1, GL_FALSE, glm::value_ptr(coordTransform));
-    // glBindVertexArray(VAO);
-    // glDrawArrays(GL_TRIANGLES, 0, 6);
 }
