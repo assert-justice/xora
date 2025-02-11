@@ -6,6 +6,7 @@
 #include "vm_input.hpp"
 #include "vm_graphics.hpp"
 #include "vm_math.hpp"
+#include "vm_physics.hpp"
 
 bool VM::initInternal()
 {
@@ -17,6 +18,7 @@ bool VM::initInternal()
     bindInput();
     bindGraphics();
     bindMath();
+    bindPhysics();
     // Read main script
     auto text = readFile(&hasError, "main.py");
     if(hasError) {

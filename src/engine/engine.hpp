@@ -3,6 +3,7 @@
 // #include "input/vinput.hpp"
 #include "vm/vm.hpp"
 #include "xo_math/xo_math.hpp"
+#include "physics/physics.hpp"
 
 class Engine{
     public:
@@ -10,6 +11,7 @@ class Engine{
     // VInput input;
     VM vm;
     XoMath xoMath;
+    Physics physics;
     bool init();
     void cleanup();
     void quit();

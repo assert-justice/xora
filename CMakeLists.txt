@@ -76,10 +76,15 @@ set( XORA-VM
     src/vm/vm_input.cpp
     src/vm/vm_graphics.cpp
     src/vm/vm_math.cpp
+    src/vm/vm_physics.cpp
 )
 
 set( XORA-MATH
     src/xo_math/xo_math.cpp
+)
+
+set( XORA-PHYSICS
+    src/physics/physics.cpp
 )
 
 # set( XORA-GAME 
@@ -89,7 +94,7 @@ set( XORA-MATH
 #     src/game/camera.cpp
 # )
 
-set( XORA-SRC ${XORA-EXTERN} ${XORA-UTILS} ${XORA-ENGINE} ${XORA-INPUT} ${XORA-GRAPHICS} ${XORA-MATH} ${XORA-VM} src/main.cpp )
+set( XORA-SRC ${XORA-EXTERN} ${XORA-UTILS} ${XORA-ENGINE} ${XORA-INPUT} ${XORA-GRAPHICS} ${XORA-MATH} ${XORA-PHYSICS} ${XORA-VM} src/main.cpp )
 
 add_executable( xora ${XORA-SRC} ${GLAD_GL} )
 # add_executable( xora WIN32 ${XORA-SRC} ${GLAD_GL} )

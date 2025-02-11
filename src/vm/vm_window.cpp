@@ -16,17 +16,6 @@ static bool setStatsFn(int argc, py_Ref argv){
     return true;
 }
 
-// static bool getWidthFn(int argc, py_Ref argv){
-//     PY_CHECK_ARGC(0);
-//     py_newint(py_retval(), engine.graphics.getWindowWidth());
-//     return true;
-// }
-// static bool getHeightFn(int argc, py_Ref argv){
-//     PY_CHECK_ARGC(0);
-//     py_newint(py_retval(), engine.graphics.getWindowHeight());
-//     return true;
-// }
-
 static bool getDimensionsFn(int argc, py_Ref argv){
     PY_CHECK_ARGC(0);
     py_Ref r = py_retval();
@@ -41,6 +30,4 @@ void bindWindow(){
     auto mod = py_newmodule("xora_engine.window");
     py_bindfunc(mod, "set_stats", setStatsFn);
     py_bindfunc(mod, "get_dimensions", getDimensionsFn);
-    // py_bindfunc(mod, "get_width", getWidthFn);
-    // py_bindfunc(mod, "get_height", getHeightFn);
 }

@@ -40,6 +40,12 @@ static bool translateFn(int argc, py_Ref argv){
     py_newnone(py_retval());
     return true;
 }
+static bool scaleFn(int argc, py_Ref argv){
+    PY_CHECK_ARGC(0);
+    engine.xoMath.scale();
+    py_newnone(py_retval());
+    return true;
+}
 static bool rotateEulerFn(int argc, py_Ref argv){
     PY_CHECK_ARGC(0);
     engine.xoMath.rotateEuler();
@@ -54,5 +60,6 @@ void bindMath()
     py_bindfunc(mod, "push_perspective", pushPerspectiveFn);
     py_bindfunc(mod, "push_vector3", pushVector3Fn);
     py_bindfunc(mod, "translate", translateFn);
+    py_bindfunc(mod, "scale", scaleFn);
     py_bindfunc(mod, "rotate_euler", rotateEulerFn);
 }

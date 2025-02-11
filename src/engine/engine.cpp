@@ -6,13 +6,17 @@ bool Engine::init(){
     vm.init(&hasError);
     graphics.init(&hasError);
     xoMath.init(&hasError);
+    physics.init(&hasError);
     if(hasError) return false;
     return loop();
 }
 
 void Engine::cleanup()
 {
+    physics.cleanup();
+    xoMath.cleanup();
     graphics.cleanup();
+    vm.cleanup();
 }
 
 void Engine::quit()
@@ -39,6 +43,9 @@ bool Engine::loop()
     double scriptTime;
     double elapsedTime = 0;
     if(!vm.launch()) return false;
+    // physics.simulate(dt);
+    // physics.simulate(dt);
+    // physics.simulate(dt);
     while (isRunning){
         double newTime = getTime();
         // time since last frame
@@ -54,6 +61,7 @@ bool Engine::loop()
             scriptTime = getTime();
             // input.poll(scriptTime);
             glfwPollEvents();
+            physics.simulate(dt);
             if(!vm.update()) return false;
             elapsedTime = getTime() - scriptTime;
             acc -= dt;
