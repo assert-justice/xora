@@ -28,6 +28,19 @@ int Physics::addSphereShape(float radius)
     return idx;
 }
 
+int Physics::addStaticMeshShape(std::vector<float> vertices)
+{
+    int idx = collisionShapes.size();
+    printf("TODO: not implemented\n");
+    // int triangleIndexBase;
+    // auto b = new btTriangleIndexVertexArray(vertices.size()/3, &triangleIndexBase, );
+    // auto m = btIndexedMesh();
+    // b->addIndexedMesh(m);
+    // btCollisionShape* shape = new btBvhTriangleMeshShape(b, false);
+    // collisionShapes.push_back(shape);
+    return idx;
+}
+
 int Physics::addRigidBody(int shapeId, btVector3 position, btScalar mass)
 {
     //create a dynamic rigidbody
@@ -52,16 +65,16 @@ int Physics::addRigidBody(int shapeId, btVector3 position, btScalar mass)
     btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
     btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
     btRigidBody* body = new btRigidBody(rbInfo);
-    int id = dynamicsWorld->getNumCollisionObjects();
+    // int id = dynamicsWorld->getNumCollisionObjects();
     dynamicsWorld->addRigidBody(body);
-    rigidBodyLookup.insert(std::make_pair(id, body));
-    return id;
+    // rigidBodyLookup.insert(std::make_pair(id, body));
+    return rigidBodyLookup.add(body);
 }
 
 btRigidBody *Physics::getRigidBody(int bodyId)
 {
     // TODO: bounds checking
-    return rigidBodyLookup.at(bodyId);
+    return rigidBodyLookup.get(bodyId);
 }
 
 bool Physics::initInternal()
@@ -96,7 +109,6 @@ void Physics::cleanupInternal()
 			delete body->getMotionState();
 		}
 		dynamicsWorld->removeCollisionObject(obj);
-		delete obj;
 	}
     rigidBodyLookup.clear();
     //delete collision shapes
