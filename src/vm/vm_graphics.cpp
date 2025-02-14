@@ -151,6 +151,14 @@ static bool newMeshFn(int argc, py_Ref argv){
     py_newint(py_retval(), id);
     return true;
 }
+static bool loadObjFn(int argc, py_Ref argv){
+    PY_CHECK_ARGC(1);
+    PY_CHECK_ARG_TYPE(0, tp_str);
+    auto path = py_tostr(py_arg(0));
+    int id = engine.graphics.loadObj(path);
+    py_newint(py_retval(), id);
+    return true;
+}
 
 static bool drawMeshFn(int argc, py_Ref argv){
     PY_CHECK_ARGC(1);
@@ -177,5 +185,6 @@ void bindGraphics(){
     py_bindfunc(mod, "bind_texture", bindTextureFn);
     py_bindfunc(mod, "set_shader_uniform_mat4x4", setShaderUniformMat4x4);
     py_bindfunc(mod, "new_mesh", newMeshFn);
+    py_bindfunc(mod, "load_obj", loadObjFn);
     py_bindfunc(mod, "draw_mesh", drawMeshFn);
 }

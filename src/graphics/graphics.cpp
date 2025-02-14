@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "tiny_obj_loader.h"
 
 float quad[] = {
     1.0f, 1.0f, 0.0f,     1.0f, 1.0f, // top right
@@ -258,6 +259,85 @@ int Graphics::newMesh(std::vector<float> &data, std::vector<int> attribSizes)
 {
     auto mesh = new Mesh(data, attribSizes);
     return meshStore.add(mesh);
+}
+
+int Graphics::loadObj(std::string path)
+{
+    // TODO: support multiple shapes. Return a vector of mesh indicies?
+    // TODO: Handle mtl file path better.
+    tinyobj::ObjReaderConfig reader_config;
+    reader_config.mtl_search_path = "./models"; // Path to material files
+
+    tinyobj::ObjReader reader;
+
+    if (!reader.ParseFromFile(path, reader_config)) {
+    if (!reader.Error().empty()) {
+        std::cerr << "TinyObjReader: " << reader.Error();
+    }
+        return -1;
+    }
+    if (!reader.Warning().empty()) {
+        std::cout << "TinyObjReader: " << reader.Warning();
+    }
+    auto& attrib = reader.GetAttrib();
+    auto& shapes = reader.GetShapes();
+    auto& materials = reader.GetMaterials();
+    if(shapes.size() > 1){
+        std::cout << "Only supports one shape obj files at this time\n";
+        return -1;
+    }
+    for (size_t s = 0; s < shapes.size(); s++) {
+        std::vector<float> data;
+        // Loop over faces(polygon)
+        size_t index_offset = 0;
+        for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
+            size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
+        
+            // Loop over vertices in the face.
+            for (size_t v = 0; v < fv; v++) {
+                // access to vertex
+                tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
+            
+                tinyobj::real_t vx = attrib.vertices[3*size_t(idx.vertex_index)+0];
+                tinyobj::real_t vy = attrib.vertices[3*size_t(idx.vertex_index)+1];
+                tinyobj::real_t vz = attrib.vertices[3*size_t(idx.vertex_index)+2];
+            
+                // Check if `normal_index` is zero or positive. negative = no normal data
+                // if (idx.normal_index >= 0) {
+                //     tinyobj::real_t nx = attrib.normals[3*size_t(idx.normal_index)+0];
+                //     tinyobj::real_t ny = attrib.normals[3*size_t(idx.normal_index)+1];
+                //     tinyobj::real_t nz = attrib.normals[3*size_t(idx.normal_index)+2];
+                // }
+                data.push_back(vx);
+                data.push_back(vy);
+                data.push_back(vz);
+            
+                // Check if `texcoord_index` is zero or positive. negative = no texcoord data
+                if (idx.texcoord_index >= 0) {
+                    tinyobj::real_t tx = attrib.texcoords[2*size_t(idx.texcoord_index)+0];
+                    tinyobj::real_t ty = attrib.texcoords[2*size_t(idx.texcoord_index)+1];
+                    data.push_back(tx);
+                    data.push_back(ty);
+                }
+                else{
+                    printf("no tex coords!\n");
+                    data.push_back(0);
+                    data.push_back(0);
+                }
+                // Optional: vertex colors
+                // tinyobj::real_t red   = attrib.colors[3*size_t(idx.vertex_index)+0];
+                // tinyobj::real_t green = attrib.colors[3*size_t(idx.vertex_index)+1];
+                // tinyobj::real_t blue  = attrib.colors[3*size_t(idx.vertex_index)+2];
+            }
+            index_offset += fv;
+        
+            // per-face material
+            shapes[s].mesh.material_ids[f];
+        }
+        int id = newMesh(data, {3,2});
+        return id;
+    }
+    return 0;
 }
 
 void Graphics::freeMesh(int id)

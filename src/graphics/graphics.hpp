@@ -51,6 +51,7 @@ class Graphics: public Module{
     Shader* getShader(int id);
     // Meshes
     int newMesh(std::vector<float> &data, std::vector<int> attribSizes);
+    int loadObj(std::string path);
     void freeMesh(int id);
     Mesh* getMesh(int id);
     protected:

@@ -56,7 +56,8 @@ class Game:
         self.turn_speed = 1
         self.brick_tex = Texture(graphics.new_texture_from_file('./textures/wall.jpg'))
         self.crate_tex = Texture(graphics.new_texture_from_file('./textures/container.jpg'))
-        self.cam_pos = Vec3(0.0, 0.0, -10.0)
+        self.common_tex = Texture(graphics.new_texture_from_file('./textures/colormap.png'))
+        self.cam_pos = Vec3(0.0, 0.0, -5.0)
         self.cam_angle = Vec2(0.0, 0.0)
         with open('./shaders/ball_vert.glsl', 'r') as f:
             vert_src = f.read()
@@ -67,11 +68,11 @@ class Game:
         self.perspective_loc = graphics.get_shader_uniform_location(self.shader_id, 'perspective')
         self.floor_shape_id = physics.add_box_shape(50.0, 50.0, 50.0)
         self.box_shape_id = physics.add_box_shape(0.5, 0.5, 0.5)
-        self.sphere_shape_id = physics.add_sphere_shape(0.5)
+        self.sphere_shape_id = physics.add_sphere_shape(0.25)
         cube_verts = [v*100 for v in cube_verts]
         self.big_cube = graphics.new_mesh(cube_verts, [3,2])
         box_ent_data = EntData(self.box_shape_id, 1, self.crate_tex, self.shader_id, self.world_loc)
-        sphere_ent_data = EntData(self.sphere_shape_id, 1, self.crate_tex, self.shader_id, self.world_loc)
+        sphere_ent_data = EntData(self.sphere_shape_id, 3, self.crate_tex, self.shader_id, self.world_loc)
         floor_ent_data = EntData(self.floor_shape_id, self.big_cube, self.brick_tex, self.shader_id, self.world_loc)
         self.boxes = [
             Box(sphere_ent_data, Vec3(0.0, 0.0, 0.0), 1.0),

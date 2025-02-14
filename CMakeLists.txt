@@ -40,13 +40,13 @@ set( XORA-EXTERN
     ./include/stb_image_write.c
     ./include/glad/glad.c
     ./include/pocketpy.c
+    ./include/tiny_obj_loader.cc
 )
 
 set( XORA-UTILS
     src/utils/fs.cpp
     src/utils/path.cpp
     src/utils/time.cpp
-    src/utils/tiny_obj_loader.cc
 )
 
 set( XORA-ENGINE

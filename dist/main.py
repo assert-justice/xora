@@ -12,6 +12,8 @@ def init():
     global game
     global tex
     game = Game()
+    m = graphics.load_obj('./models/marble-high.obj')
+    print(m)
     # tex = Texture(graphics.new_texture_from_file('./textures/moth.png'))
     # # tex.height = -600.0
     # # tex.width = 800.0
