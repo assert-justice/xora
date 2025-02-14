@@ -61,7 +61,7 @@ bool Engine::loop()
             scriptTime = getTime();
             // input.poll(scriptTime);
             glfwPollEvents();
-            physics.simulate(dt);
+            // physics.simulate(dt);
             if(!vm.update()) return false;
             elapsedTime = getTime() - scriptTime;
             acc -= dt;

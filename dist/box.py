@@ -11,3 +11,6 @@ class Box:
         physics.push_body_transform(self.handle)
         graphics.set_shader_uniform_mat4x4(self.ent_data.shader_id, self.ent_data.world_loc)
         graphics.draw_mesh(self.ent_data.mesh_id)
+    def get_pos(self) -> Vec3:
+        pos = physics.get_body_position(self.handle)
+        return Vec3(pos[0], pos[1], pos[2])

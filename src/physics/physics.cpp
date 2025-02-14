@@ -65,6 +65,7 @@ int Physics::addRigidBody(int shapeId, btVector3 position, btScalar mass)
     btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
     btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
     btRigidBody* body = new btRigidBody(rbInfo);
+    // if (isDynamic) body.
     // int id = dynamicsWorld->getNumCollisionObjects();
     dynamicsWorld->addRigidBody(body);
     // rigidBodyLookup.insert(std::make_pair(id, body));
