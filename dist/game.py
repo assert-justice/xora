@@ -72,7 +72,7 @@ class Game:
         cube_verts = [v*100 for v in cube_verts]
         self.big_cube = graphics.new_mesh(cube_verts, [3,2])
         box_ent_data = EntData(self.box_shape_id, 1, self.crate_tex, self.shader_id, self.world_loc)
-        sphere_ent_data = EntData(self.sphere_shape_id, 3, self.crate_tex, self.shader_id, self.world_loc)
+        sphere_ent_data = EntData(self.sphere_shape_id, 3, self.common_tex, self.shader_id, self.world_loc)
         floor_ent_data = EntData(self.floor_shape_id, self.big_cube, self.brick_tex, self.shader_id, self.world_loc)
         self.boxes = [
             Box(sphere_ent_data, Vec3(0.0, 0.0, 0.0), 1.0),
@@ -80,7 +80,6 @@ class Game:
             Box(box_ent_data, Vec3(0.0, 2.0, 0.0), 1.0),
             Box(floor_ent_data, Vec3(0.0, 56.0, 0.0), 0.0),
         ]
-        # physics.add_impulse(self.boxes[0].handle, 0.0, -10.0, 0.0)
         self.is_jump_down = False
 
     def update(self, dt: float):
@@ -91,10 +90,6 @@ class Game:
             move.x = 1.0
         if input.is_key_down(Keys.d):
             move.x = -1.0
-        # if input.is_key_down(Keys.left_control):
-        #     move.y = -1.0
-        # if input.is_key_down(Keys.space):
-        #     move.y = 1.0
         if input.is_key_down(Keys.s):
             move.z = 1.0
         if input.is_key_down(Keys.w):
@@ -107,6 +102,7 @@ class Game:
             self.cam_angle.y += self.turn_speed * dt
         if input.is_key_down(Keys.down):
             self.cam_angle.y -= self.turn_speed * dt
+        move *= 3.0
         mx = move.x
         mz = move.z
         a = self.cam_angle.x
